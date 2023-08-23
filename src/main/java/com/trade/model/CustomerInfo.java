@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomerInfo {
 
-    private String customerId;
-    private AccountInfo accountInfo;
+    private String customerInfoId;
 }

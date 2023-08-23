@@ -1,7 +1,5 @@
 server:
   port: 9070
-  http2:
-    enabled: true
 
 app:
   couchbase:
@@ -14,16 +12,14 @@ app:
 spring:
   application:
     name: cedar-agent
+  graphql:
+    graphiql:
+      enabled: true
   main:
-    allow-bean-definition-overriding: true
     web-application-type: reactive
-  jackson:
-    serialization:
-      FAIL_ON_EMPTY_BEANS: false
-    default-property-inclusion: NON_NULL
   webflux:
     base-path: /api/trade-service
 
-#logging:
-#  level:
-#    org.springframework.data.couchbase.core: TRACE
+logging:
+  level:
+    org.springframework.data.couchbase.core: TRACE

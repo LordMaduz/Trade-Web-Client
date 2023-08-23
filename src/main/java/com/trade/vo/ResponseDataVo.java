@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
+import java.util.Optional;
 
 @NoArgsConstructor
 @Data
@@ -15,4 +16,6 @@ public class ResponseDataVo {
     private Map<String,Object> headers;
 
     private Integer status_code;
+
+    private Optional<String> data;
 }

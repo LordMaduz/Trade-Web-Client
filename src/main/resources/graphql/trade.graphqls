@@ -1,0 +1,75 @@
+# java.time.LocalDateTime implementation
+scalar LocalDateTime
+scalar BigDecimal
+scalar Long
+
+type Query{
+    tradeWithFilter(searchRequestVo: SearchRequestVo): [Trade]
+    tradeByTradeId(tradeId: String):Trade
+    count(searchRequestVo: SearchRequestVo):ResultCount
+}
+
+type ResultCount{
+    result: Int
+}
+
+type Trade{
+    tradeId:String
+    tradeInfo:TradeInfo
+    age:Int
+    created:LocalDateTime
+    status:Boolean
+}
+
+type TradeInfo{
+    tradeInfoId:String
+    customerInfo: CustomerInfo
+}
+
+type CustomerInfo{
+    customerInfoId:String
+}
+
+input SearchRequestVo{
+    pagination:Pagination
+}
+
+input Pagination{
+    sortParam:[SortObject]
+    filterParam:FilterParam
+    page:Int!
+    size:Int!
+}
+
+input SortObject{
+    key:String!
+    sortType:String!
+}
+
+input FilterParam{
+    filterParam:[SearchCriteria]
+}
+
+input SearchCriteria{
+    key:String
+    filterType:String
+    filterExpression: String
+    textValue:TextValue
+    dateRangeValue:DateRangeValue
+    numberRangeValue:NumberRangeValue
+
+}
+
+input TextValue{
+    value:String
+}
+
+input DateRangeValue{
+    start: LocalDateTime
+    end: LocalDateTime
+}
+
+input NumberRangeValue{
+    start:BigDecimal
+    end:BigDecimal
+}

@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TradeInfo {
 
-    private String tradeId;
+    private String tradeInfoId;
     private CustomerInfo customerInfo;
 }
