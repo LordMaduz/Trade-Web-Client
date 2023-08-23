@@ -1,0 +1,66 @@
+{
+  tradeWithFilter(searchRequestVo: {
+    pagination:{
+      filterParam: {
+        filterParam: [
+          {
+            key: "tradeInfo.tradeInfoId"
+            textValue: {
+              value: "t-124"
+            }
+            filterType: "TEXT"
+            filterExpression: "="
+          }
+        ]
+      }
+      sortParam:[{
+        key: "tradeInfo.tradeInfoId"
+        sortType: "ASC"
+      },
+      {
+        key: "tradeInfo.customerInfo.customerInfoId"
+        sortType: "ASC"
+      }]
+      page: 0
+      size: 2
+    }
+  }){
+    tradeId
+    age
+    created
+    tradeInfo{
+      tradeInfoId
+      customerInfo{
+        customerInfoId
+      }
+    }
+  }
+  count(searchRequestVo: {
+    pagination:{
+      filterParam: {
+        filterParam: [
+          {
+            key: "tradeInfo.tradeInfoId"
+            textValue: {
+              value: "t-123"
+            }
+            filterType: "TEXT"
+            filterExpression: "="
+          }
+        ]
+      }
+      sortParam:[{
+        key: "tradeInfo.tradeInfoId"
+        sortType: "ASC"
+      },
+      {
+        key: "tradeInfo.customerInfo.customerInfoId"
+        sortType: "ASC"
+      }]
+      page: 0
+      size: 3
+    }
+  }){
+		count
+  }
+}
