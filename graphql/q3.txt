@@ -1,0 +1,44 @@
+{
+  filteredTradesWithCount(searchRequestVo: {
+    pagination:{
+      filterParam: {
+        filterParam: [
+          {
+            key: "tradeInfo.tradeInfoId"
+            textValue: {
+              value: "t-123"
+            }
+            filterType: "TEXT"
+            filterExpression: "="
+          }
+        ]
+      }
+      sortParam:[{
+        key: "tradeInfo.tradeInfoId"
+        sortType: "ASC"
+      },
+      {
+        key: "tradeInfo.customerInfo.customerInfoId"
+        sortType: "ASC"
+      }]
+      page: 1
+      size: 2
+    }
+  }){
+    records{
+      tradeId
+      age
+      status
+      tradeInfo{
+        tradeInfoId
+        customerInfo{
+          customerInfoId
+        }
+      }
+      
+    }
+    totalElements
+    currentPage
+    numberOfElements
+  }
+}
