@@ -34,9 +34,9 @@ public class TradeServiceGraphQL {
         final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
         return tradeRepo.findByQuery(getFilterCriteria(pagination),
                 getSortCriteria(pagination), getPaginationCriteria(pagination)).collectList().flatMap(
-                        list -> tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> Mono.fromCallable(() ->
-                                new SearchResultVo(list, count, pagination.getPage(), list.size())
-                        )));
+                list -> tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> Mono.fromCallable(() ->
+                        new SearchResultVo(list, count, pagination.getPage(), list.size())
+                )));
     }
 
     public Mono<ResultCount> count(SearchRequestVo searchRequestVo) {
@@ -116,21 +116,21 @@ public class TradeServiceGraphQL {
     }
 
     private void generateRangeConditions(final StringBuilder stringBuilder, final String filterExpression, final String key, final Object start, final Object end) {
-        if (filterExpression != FilterConstants.IN_RANGE) {
-            stringBuilder.append(key);
+        if (!filterExpression.equals(FilterConstants.IN_RANGE)) {
+            stringBuilder.append(start);
             appendCharacter(stringBuilder, StringUtils.SPACE);
             stringBuilder.append(filterExpression);
             appendCharacter(stringBuilder, StringUtils.SPACE);
-            stringBuilder.append(start);
+            stringBuilder.append(key);
         } else {
-            stringBuilder.append(start);
-            appendCharacter(stringBuilder, StringUtils.SPACE);
-            stringBuilder.append(FilterConstants.GREATER_THAN);
+
             appendCharacter(stringBuilder, StringUtils.SPACE);
             stringBuilder.append(key);
             appendCharacter(stringBuilder, StringUtils.SPACE);
-            stringBuilder.append(FilterConstants.GREATER_THAN);
+            stringBuilder.append(FilterConstants.BETWEEN);
             appendCharacter(stringBuilder, StringUtils.SPACE);
+            stringBuilder.append(start);
+            stringBuilder.append(FilterConstants.AND_CONDITION);
             stringBuilder.append(end);
         }
     }
