@@ -3,7 +3,7 @@ package com.trade.constants;
 public final class FilterConstants {
 
     public static final String GREATER_THAN = "<";
-    public static final String LESS_THAN = "<";
+    public static final String BETWEEN = " BETWEEN ";
     public static final String SINGLE_QUOTATION = "'";
     public static final String IN_RANGE = "inRange";
     public static final String AND_CONDITION = " AND ";
