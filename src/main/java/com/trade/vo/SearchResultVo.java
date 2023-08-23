@@ -15,7 +15,7 @@ import java.util.List;
 public class SearchResultVo {
 
     private List<Trade> records;
-    private Integer currentPage=0;
-    private Integer numberOfElements;
     private Long totalElements;
+    private Integer currentPage=0;
+    private Integer numberOfElements = 0;
 }

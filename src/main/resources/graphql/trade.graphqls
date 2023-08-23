@@ -5,12 +5,20 @@ scalar Long
 
 type Query{
     tradeWithFilter(searchRequestVo: SearchRequestVo): [Trade]
+    filteredTradesWithCount(searchRequestVo: SearchRequestVo): SearchResultVo
     tradeByTradeId(tradeId: String):Trade
     count(searchRequestVo: SearchRequestVo):ResultCount
 }
 
+type SearchResultVo{
+    records:[Trade]
+    totalElements:Long
+    currentPage:Int
+    numberOfElements:Int
+}
+
 type ResultCount{
-    result: Int
+    count: Long
 }
 
 type Trade{
@@ -37,13 +45,13 @@ input SearchRequestVo{
 input Pagination{
     sortParam:[SortObject]
     filterParam:FilterParam
-    page:Int!
-    size:Int!
+    page:Int
+    size:Int
 }
 
 input SortObject{
-    key:String!
-    sortType:String!
+    key:String
+    sortType:String
 }
 
 input FilterParam{
@@ -51,9 +59,9 @@ input FilterParam{
 }
 
 input SearchCriteria{
-    key:String
-    filterType:String
-    filterExpression: String
+    key:String!
+    filterType:String!
+    filterExpression: String!
     textValue:TextValue
     dateRangeValue:DateRangeValue
     numberRangeValue:NumberRangeValue
@@ -61,15 +69,15 @@ input SearchCriteria{
 }
 
 input TextValue{
-    value:String
+    value:String!
 }
 
 input DateRangeValue{
-    start: LocalDateTime
+    start: LocalDateTime!
     end: LocalDateTime
 }
 
 input NumberRangeValue{
-    start:BigDecimal
+    start:BigDecimal!
     end:BigDecimal
 }

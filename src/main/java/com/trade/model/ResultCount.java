@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResultCount {
-
-    private Integer result;
+    private Long count;
 }

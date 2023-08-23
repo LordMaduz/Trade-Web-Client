@@ -1,8 +1,6 @@
 package com.trade.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.trade.model.ResultCount;
-import com.trade.model.TradeFilter;
 import com.trade.model.entity.Trade;
 import com.trade.service.TradeServiceGraphQL;
 import com.trade.vo.SearchRequestVo;
@@ -24,6 +22,11 @@ public class TradeGraphQLController {
     @QueryMapping
     Flux<Trade> tradeWithFilter(@Argument SearchRequestVo searchRequestVo){
         return tradeServiceGraphQL.getTradesWithFilter(searchRequestVo);
+    }
+
+    @QueryMapping
+    Mono<SearchResultVo> filteredTradesWithCount(@Argument SearchRequestVo searchRequestVo){
+        return tradeServiceGraphQL.filteredTradesWithCount(searchRequestVo);
     }
 
     @QueryMapping

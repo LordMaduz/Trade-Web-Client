@@ -1,18 +1,16 @@
 package com.trade.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.trade.model.ResultCount;
 import com.trade.model.entity.Trade;
 import com.trade.repo.TradeRepo;
 import com.trade.service.TradeService;
 import com.trade.service.TradeServiceGraphQL;
 import com.trade.vo.SearchRequestVo;
-import com.trade.vo.SearchResultVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping()
@@ -42,6 +40,16 @@ public class TradeController {
 //        searchRequestVo.setPagination(pagination);
 //        return tradeServiceGraphQL.getTradesWithFilter(searchRequestVo);
 //    }
+
+    @GetMapping("/count")
+    public Mono<ResultCount> getCount(){
+        SearchRequestVo searchRequestVo  = new SearchRequestVo();
+        SearchRequestVo.Pagination pagination = new SearchRequestVo.Pagination();
+        pagination.setPage(0);
+        pagination.setSize(3);
+        searchRequestVo.setPagination(pagination);
+        return tradeServiceGraphQL.count(searchRequestVo);
+    }
 
 //    @GetMapping("/filter/{fields}/{filters}")
 //    public Flux<JsonNode> getTradeByQuery(@PathVariable final String fields, @PathVariable(required = false) final String filters) {

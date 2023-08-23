@@ -5,6 +5,7 @@ import com.trade.model.*;
 import com.trade.model.entity.Trade;
 import com.trade.repo.TradeRepo;
 import com.trade.vo.SearchRequestVo;
+import com.trade.vo.SearchResultVo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,15 +26,24 @@ public class TradeServiceGraphQL {
     public Flux<Trade> getTradesWithFilter(SearchRequestVo searchRequestVo) {
 
         final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
-        return tradeRepo.findByQuery(getFilterCriteria(pagination, false));
+        return tradeRepo.findByQuery(getFilterCriteria(pagination), getSortCriteria(pagination), getPaginationCriteria(pagination));
+    }
+
+    public Mono<SearchResultVo> filteredTradesWithCount(SearchRequestVo searchRequestVo) {
+
+        final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
+        return tradeRepo.findByQuery(getFilterCriteria(pagination),
+                getSortCriteria(pagination), getPaginationCriteria(pagination)).collectList().flatMap(
+                        list -> tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> Mono.fromCallable(() ->
+                                new SearchResultVo(list, count, pagination.getPage(), list.size())
+                        )));
     }
 
     public Mono<ResultCount> count(SearchRequestVo searchRequestVo) {
 
         SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
 
-
-        return tradeRepo.getCount(getFilterCriteria(pagination, true)).flatMap(count -> {
+        return tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> {
             final ResultCount resultCount = new ResultCount(count);
             return Mono.just(resultCount);
         });
@@ -43,14 +53,11 @@ public class TradeServiceGraphQL {
         return tradeRepo.findByTradeId(tradeId);
     }
 
-    private String getFilterCriteria(final SearchRequestVo.Pagination pagination, final Boolean onlyFilterConditions) {
+
+    private String getFilterCriteria(final SearchRequestVo.Pagination pagination) {
         final StringBuilder stringBuilder = new StringBuilder();
 
         SearchRequestVo.FilterParam filterParam = pagination.getFilterParam();
-        List<SortObject> sortObjects = pagination.getSortParam();
-        Integer page = pagination.getPage();
-        Integer size = pagination.getSize();
-
 
         if (!ObjectUtils.isEmpty(filterParam) && !ObjectUtils.isEmpty(filterParam.getFilterParam())) {
             Iterator<SearchCriteria> iterator = filterParam.getFilterParam().iterator();
@@ -91,11 +98,16 @@ public class TradeServiceGraphQL {
                 }
             }
         }
-
-        generateSortConditions(stringBuilder, sortObjects, onlyFilterConditions);
-        generatePaginationConditions(stringBuilder, size, page);
-
         return stringBuilder.toString();
+    }
+
+
+    private String getSortCriteria(SearchRequestVo.Pagination pagination) {
+        return generateSortConditions(pagination.getSortParam());
+    }
+
+    private String getPaginationCriteria(SearchRequestVo.Pagination pagination) {
+        return generatePaginationConditions(pagination.getSize(), pagination.getPage());
     }
 
 
@@ -134,18 +146,24 @@ public class TradeServiceGraphQL {
         appendCharacter(stringBuilder, StringUtils.SPACE);
     }
 
-    private void generatePaginationConditions(final StringBuilder stringBuilder, final Integer size, final Integer page) {
+    private String generatePaginationConditions(final Integer size, final Integer page) {
+
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(FilterConstants.LIMIT_CONDITION);
         stringBuilder.append(size);
         appendCharacter(stringBuilder, StringUtils.SPACE);
         stringBuilder.append(FilterConstants.OFFSET_CONDITION);
         stringBuilder.append(page * size);
         appendCharacter(stringBuilder, StringUtils.SPACE);
+
+        return stringBuilder.toString();
     }
 
-    private void generateSortConditions(final StringBuilder stringBuilder, List<SortObject> sortObjects, Boolean onlyFilterConditions) {
+    private String generateSortConditions(List<SortObject> sortObjects) {
 
-        if (!ObjectUtils.isEmpty(sortObjects) && !onlyFilterConditions) {
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        if (!ObjectUtils.isEmpty(sortObjects)) {
             stringBuilder.append(FilterConstants.ORDER_BY_CONDITION);
             Iterator<SortObject> sortObjectIterator = sortObjects.listIterator();
 
@@ -162,5 +180,7 @@ public class TradeServiceGraphQL {
                 }
             }
         }
+
+        return stringBuilder.toString();
     }
 }
