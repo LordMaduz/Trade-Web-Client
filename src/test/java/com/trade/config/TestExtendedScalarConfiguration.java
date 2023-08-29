@@ -3,19 +3,16 @@ package com.trade.config;
 import graphql.language.StringValue;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.*;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.Locale;
 
-@Configuration
-public class ExtendedScalarsConfiguration {
-
+@TestConfiguration
+public class TestExtendedScalarConfiguration {
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder.scalar(localDateTimeScalar())

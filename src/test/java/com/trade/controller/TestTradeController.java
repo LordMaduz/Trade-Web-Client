@@ -1,38 +1,35 @@
 package com.trade.controller;
 
-import com.trade.model.ResultCount;
 import com.trade.model.entity.Trade;
+import com.trade.service.TestTradeService;
 import com.trade.service.TradeServiceGraphQL;
-import com.trade.vo.SearchRequestVo;
-import com.trade.vo.SearchResultVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Controller
 @RequiredArgsConstructor
-public class TradeGraphQLController {
+public class TestTradeController {
 
-    private final TradeServiceGraphQL tradeServiceGraphQL;
+    private final TestTradeService tradeServiceGraphQL;
 
-    @QueryMapping
-    Flux<Trade> tradeWithFilter(@Argument SearchRequestVo searchRequestVo){
-        return tradeServiceGraphQL.getTradesWithFilter(searchRequestVo);
-    }
-
-    @QueryMapping
-    Mono<SearchResultVo> filteredTradesWithCount(@Argument SearchRequestVo searchRequestVo){
-        return tradeServiceGraphQL.filteredTradesWithCount(searchRequestVo);
-    }
-
-    @QueryMapping
-    Mono<ResultCount> count(@Argument SearchRequestVo searchRequestVo){
-        return tradeServiceGraphQL.count(searchRequestVo);
-    }
+//    @QueryMapping
+//    Flux<Trade> tradeWithFilter(@Argument SearchRequestVo searchRequestVo){
+//        return tradeServiceGraphQL.getTradesWithFilter(searchRequestVo);
+//    }
+//
+//    @QueryMapping
+//    Mono<SearchResultVo> filteredTradesWithCount(@Argument SearchRequestVo searchRequestVo){
+//        return tradeServiceGraphQL.filteredTradesWithCount(searchRequestVo);
+//    }
+//
+//    @QueryMapping
+//    Mono<ResultCount> count(@Argument SearchRequestVo searchRequestVo){
+//        return tradeServiceGraphQL.count(searchRequestVo);
+//    }
 
 
     @QueryMapping

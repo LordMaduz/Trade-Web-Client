@@ -1,63 +1,63 @@
 package com.trade.service;
 
 import com.trade.constants.FilterConstants;
-import com.trade.model.*;
+import com.trade.model.FilterType;
+import com.trade.model.SearchCriteria;
+import com.trade.model.SortObject;
 import com.trade.model.entity.Trade;
-import com.trade.repo.TradeRepo;
+import com.trade.util.TestUtil;
 import com.trade.vo.SearchRequestVo;
-import com.trade.vo.SearchResultVo;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Setter
-public class TradeServiceGraphQL {
-    private final TradeRepo tradeRepo;
+public class TestTradeService {
 
-    public Flux<Trade> getTradesWithFilter(SearchRequestVo searchRequestVo) {
-
-        final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
-        return tradeRepo.findByQuery(getFilterCriteria(pagination), getSortCriteria(pagination), getPaginationCriteria(pagination));
-    }
-
-    public Mono<SearchResultVo> filteredTradesWithCount(SearchRequestVo searchRequestVo) {
-
-        final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
-        return tradeRepo.findByQuery(getFilterCriteria(pagination),
-                getSortCriteria(pagination), getPaginationCriteria(pagination)).collectList().flatMap(
-                list -> tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> Mono.fromCallable(() ->
-                        new SearchResultVo(list, count, pagination.getPage(), list.size())
-                )));
-    }
-
-    public Mono<ResultCount> count(SearchRequestVo searchRequestVo) {
-
-        SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
-
-        return tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> {
-            final ResultCount resultCount = new ResultCount(count);
-            return Mono.just(resultCount);
-        });
-    }
+//    public Flux<Trade> getTradesWithFilter(SearchRequestVo searchRequestVo) {
+//
+//        final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
+//        return tradeRepo.findByQuery(getFilterCriteria(pagination), getSortCriteria(pagination), getPaginationCriteria(pagination));
+//    }
+//
+//    public Mono<SearchResultVo> filteredTradesWithCount(SearchRequestVo searchRequestVo) {
+//
+//        final SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
+//        return tradeRepo.findByQuery(getFilterCriteria(pagination),
+//                getSortCriteria(pagination), getPaginationCriteria(pagination)).collectList().flatMap(
+//                list -> tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> Mono.fromCallable(() ->
+//                        new SearchResultVo(list, count, pagination.getPage(), list.size())
+//                )));
+//    }
+//
+//    public Mono<ResultCount> count(SearchRequestVo searchRequestVo) {
+//
+//        SearchRequestVo.Pagination pagination = searchRequestVo.getPagination();
+//
+//        return tradeRepo.count(getFilterCriteria(pagination)).flatMap(count -> {
+//            final ResultCount resultCount = new ResultCount(count);
+//            return Mono.just(resultCount);
+//        });
+//    }
 
     public Mono<Trade> getTradesByTradeId(String tradeId) {
-        return tradeRepo.findById(tradeId);
+        Optional<Trade> optional = TestUtil.tradeList().stream().filter(trade-> trade.getTradeId().equals(tradeId)).findAny();
+        return optional.map(Mono::just).orElse(null);
     }
 
     public Mono<Trade> createTrade(Trade trade){
-        return tradeRepo.save(trade);
+        return Mono.just(trade);
     }
 
 
@@ -187,7 +187,7 @@ public class TradeServiceGraphQL {
                 }
             }
         }
-
         return stringBuilder.toString();
     }
 }
+

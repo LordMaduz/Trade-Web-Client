@@ -29,7 +29,7 @@ public class Trade implements Serializable {
     private String tradeId;
     private TradeInfo tradeInfo;
 
-    private Integer age;
+    private Integer height;
     @CreatedDate
     private LocalDateTime created;
     private Boolean status;
